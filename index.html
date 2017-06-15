@@ -95,22 +95,27 @@
       }
 
       let i = 0;
+      let r = currentLevel;
       let currentkey = keys[i];
       if(reverse) {
-        currentkey = keys[currentLevel];
-        console.log(currentkey);
+        currentkey = keys[r];
       }
       window.addEventListener('keydown', onKeyDown);
 
       function onKeyDown(ev) {
         if(ev.keyCode == currentkey) {
           activate(currentkey, {success: true});
-          i++;
+            r--;
+            i++;
           if(i > currentLevel) {
             window.removeEventListener('keydown', onKeyDown);
             setTimeout(() => nextLevel(i), 1500);
           }
-          currentkey = keys[i];
+          if(reverse) {
+            currentkey = keys[r];
+          } else {
+            currentkey = keys[i];
+          }
         } else {
           activate(ev.keyCode, {fail: true});
           window.removeEventListener('keydown', onKeyDown);
