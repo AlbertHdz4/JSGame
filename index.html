@@ -11,6 +11,13 @@
   <title>Simon Says</title>
 </head>
 <body>
+  <div class="front" id="front">
+    <h1>Which level would you like to play?</h1>
+    <button type="button" name="button" onclick="hidePortada('reverse')">Reverse</button>
+    <button type="button" name="button" onclick="hidePortada('normal')">Normal</button>
+    <button type="button" name="button" onclick="hidePortada('hard')">Hard</button>
+    <p>Developed by Alberto Hernández L.</p>
+  </div>
   <div class="keyboard">
     <div class="row">
       <div class="key" data-key="81">q</div>
@@ -45,13 +52,30 @@
       <div class="key" data-key="77">m</div>
     </div>
   </div>
-  <!-- <div class="row rights">
-    <p>Developed by Alberto Hernández López</p>
-  </div> -->
   <script src="sweetalert.min.js"></script>
   <script>
-    const levels = 3;
-    let keys = generateKeys(levels);
+    let levels;
+    let keys;
+    let reverse;
+
+    function hidePortada(level) {
+      let front = document.getElementById("front");
+      front.classList.add("hide");
+      if(level == 'reverse') {
+        levels = 5;//Juego en reversa
+        keys = generateKeys(levels);
+        reverse = true;
+      }
+      if(level == 'normal') {
+        levels = 10;
+        keys = generateKeys(levels);
+      }
+      if(level == 'hard') {
+        levels = 15;
+        keys = generateKeys(levels);
+      }
+      nextLevel(0);
+    }
 
     function nextLevel(currentLevel) {
       if(currentLevel == levels) {
@@ -65,7 +89,6 @@
         timer: 800,
         title: `Nivel ${currentLevel + 1}`,
         showConfirmButton: false
-
       })
       for(let i = 0; i <= currentLevel; i++) {
         setTimeout(() => activate(keys[i]), 1000 * (i + 1) + 1000);
@@ -73,6 +96,10 @@
 
       let i = 0;
       let currentkey = keys[i];
+      if(reverse) {
+        currentkey = keys[currentLevel];
+        console.log(currentkey);
+      }
       window.addEventListener('keydown', onKeyDown);
 
       function onKeyDown(ev) {
@@ -109,8 +136,6 @@
         }
       }
     }
-
-    nextLevel(0);
 
     function generateKeys(levels) {
       return new Array(levels).fill(0).map(generateRandomKey);
