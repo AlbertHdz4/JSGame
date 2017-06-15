@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="height=device-height, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" href="SimonDice.css">
+  <title>Simon Says</title>
+</head>
+<body>
+  <div class="keyboard">
+    <div class="row">
+      <div class="key" data-key="81">q</div>
+      <div class="key" data-key="87">w</div>
+      <div class="key" data-key="69">e</div>
+      <div class="key" data-key="82">r</div>
+      <div class="key" data-key="84">t</div>
+      <div class="key" data-key="89">y</div>
+      <div class="key" data-key="85">u</div>
+      <div class="key" data-key="73">i</div>
+      <div class="key" data-key="79">o</div>
+      <div class="key" data-key="80">p</div>
+    </div>
+    <div class="row">
+      <div class="key" data-key="65">a</div>
+      <div class="key" data-key="83">s</div>
+      <div class="key" data-key="68">d</div>
+      <div class="key" data-key="70">f</div>
+      <div class="key" data-key="71">g</div>
+      <div class="key" data-key="72">h</div>
+      <div class="key" data-key="74">j</div>
+      <div class="key" data-key="75">k</div>
+      <div class="key" data-key="76">l</div>
+    </div>
+    <div class="row last">
+      <div class="key" data-key="90">z</div>
+      <div class="key" data-key="88">x</div>
+      <div class="key" data-key="67">c</div>
+      <div class="key" data-key="86">v</div>
+      <div class="key" data-key="66">b</div>
+      <div class="key" data-key="78">n</div>
+      <div class="key" data-key="77">m</div>
+    </div>
+  </div>
+  <div class="row rights">
+    <p>Developed by Alberto Hernández López</p>
+  </div>
+  <script>
+    const levels = 3;
+    let keys = generateKeys(levels);
+
+    function nextLevel(currentLevel) {
+      if(currentLevel == levels) {
+        return alert('Ganaste!!');
+      }
+      alert(`Nivel ${currentLevel + 1}`);
+      for(let i = 0; i <= currentLevel; i++) {
+        setTimeout(() => activate(keys[i]), 1000 * (i + 1));
+      }
+
+      let i = 0;
+      let currentkey = keys[i];
+      window.addEventListener('keydown', onKeyDown);
+
+      function onKeyDown(ev) {
+        if(ev.keyCode == currentkey) {
+          activate(currentkey, {success: true});
+          i++;
+          if(i > currentLevel) {
+            window.removeEventListener('keydown', onKeyDown);
+            setTimeout(() => nextLevel(i), 1500);
+          }
+          currentkey = keys[i];
+        } else {
+          activate(ev.keyCode, {fail: true});
+          window.removeEventListener('keydown', onKeyDown);
+          setTimeout(() => alert('Perdiste :( Sorry Not Sorry'), 1500)
+        }
+      }
+    }
+
+    nextLevel(0);
+
+    function generateKeys(levels) {
+      return new Array(levels).fill(0).map(generateRandomKey);
+    }
+
+    function generateRandomKey() {
+      const min = 65;
+      const max = 90;
+      return Math.round(Math.random() * (max - min) + min);
+    }
+
+    function getElementByKeyCode(keyCode) {
+      return document.querySelector(`[data-key="${keyCode}"]`);
+    }
+
+    function activate(keyCode, options = {}) {
+      const element = getElementByKeyCode(keyCode);
+      element.classList.add('active');
+      if(options.success) {
+        element.classList.add('success');
+      } else if(options.fail) {
+        element.classList.add('fail');
+      }
+      setTimeout(() => deActivate(element), 800);
+    }
+
+    function deActivate(element) {
+      element.className = 'key';
+    }
+  </script>
+</body>
+</html>
