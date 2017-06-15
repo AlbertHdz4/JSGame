@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" href="SimonDice.css">
+  <link rel="stylesheet" type="text/css" href="sweetalert.css">
   <title>Simon Says</title>
 </head>
 <body>
@@ -44,20 +45,30 @@
       <div class="key" data-key="77">m</div>
     </div>
   </div>
-  <div class="row rights">
+  <!-- <div class="row rights">
     <p>Developed by Alberto Hernández López</p>
-  </div>
+  </div> -->
+  <script src="sweetalert.min.js"></script>
   <script>
     const levels = 3;
     let keys = generateKeys(levels);
 
     function nextLevel(currentLevel) {
       if(currentLevel == levels) {
-        return alert('Ganaste!!');
+        return swal({
+          title: '¡Ganaste!',
+          text: '¡Lo has Logrado!',
+          type: 'success',
+        });
       }
-      alert(`Nivel ${currentLevel + 1}`);
+      swal({
+        timer: 800,
+        title: `Nivel ${currentLevel + 1}`,
+        showConfirmButton: false
+
+      })
       for(let i = 0; i <= currentLevel; i++) {
-        setTimeout(() => activate(keys[i]), 1000 * (i + 1));
+        setTimeout(() => activate(keys[i]), 1000 * (i + 1) + 1000);
       }
 
       let i = 0;
@@ -76,7 +87,25 @@
         } else {
           activate(ev.keyCode, {fail: true});
           window.removeEventListener('keydown', onKeyDown);
-          setTimeout(() => alert('Perdiste :( Sorry Not Sorry'), 1500)
+          setTimeout(() => {
+            swal({
+              title: 'Perdiste :( Sorry Not Sorry',
+              text: '¿Quieres jugar de nuevo?',
+              showCancelButton: true,
+              confirmButtonText: 'Sí',
+              cancelButtonText: 'No',
+              closeOnConfirm: true
+            }, function (ok) {
+              if(ok) {
+                keys = generateKeys(levels);
+                nextLevel(0);
+              } else {
+                swal({
+                  title: `Has llegado hasta el nivel`
+                })
+              }
+            })
+          }, 800)
         }
       }
     }
