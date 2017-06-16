@@ -54,25 +54,28 @@
   </div>
   <script src="sweetalert.min.js"></script>
   <script>
-    let levels;
+    let levels = 10;
     let keys;
+    let wrongKeys;
+    let wrongKey;
     let reverse;
 
     function hidePortada(level) {
       let front = document.getElementById("front");
       front.classList.add("hide");
       if(level == 'reverse') {
-        levels = 5;//Juego en reversa
+        levels = 6;//Juego en reversa
         keys = generateKeys(levels);
         reverse = true;
       }
       if(level == 'normal') {
-        levels = 10;
+        levels;
         keys = generateKeys(levels);
       }
       if(level == 'hard') {
-        levels = 15;
+        levels;
         keys = generateKeys(levels);
+        wrongKey = generateKeys(levels);
       }
       nextLevel(0);
     }
@@ -81,7 +84,7 @@
       if(currentLevel == levels) {
         return swal({
           title: '¡Ganaste!',
-          text: '¡Lo has Logrado!',
+          // text: '¡Lo has Logrado!',
           type: 'success',
         });
       }
@@ -91,7 +94,8 @@
         showConfirmButton: false
       })
       for(let i = 0; i <= currentLevel; i++) {
-        setTimeout(() => activate(keys[i]), 1000 * (i + 1) + 1000);
+        setTimeout(() => activate(keys[i]), 1000 * (i + 1) + 800);
+        setTimeout(() => activate(wrongKey[i], {fail: true}), 1000 * (i + 1) + 1200);
       }
 
       let i = 0;

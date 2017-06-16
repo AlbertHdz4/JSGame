@@ -116,9 +116,4 @@ p {
     border-color: black;
     display: block;
   }
-
-  75% {
-    color: white;
-    /*border-color: white;*/
-  }
 }
